@@ -11,23 +11,33 @@ fn part1(lines: &Vec<String>) -> u32 {
     for line in lines {
         let mut card_val = 0;
         let card = line.split_once(": ").unwrap().1.split_once(" | ").unwrap();
-        let wins: Vec<u32> = card
+        let mut wins: Vec<u32> = card
             .0
             .trim()
             .replace("  ", " ")
             .split(" ")
             .map(|x| x.parse::<u32>().unwrap())
             .collect();
-        let conts: Vec<u32> = card
+        wins.sort_unstable();
+        let mut conts: Vec<u32> = card
             .1
             .trim()
             .replace("  ", " ")
             .split(" ")
             .map(|x| x.parse::<u32>().unwrap())
             .collect();
+        conts.sort_unstable();
 
-        for win_num in wins {
-            if conts.contains(&win_num) {
+        let (mut i, mut j) = (0, 0);
+
+        while i < wins.len() && j < conts.len() {
+            if wins[i] < conts[j] {
+                i += 1;
+            } else if wins[i] > conts[j] {
+                j += 1;
+            } else {
+                i += 1;
+                j += 1;
                 if card_val == 0 {
                     card_val += 1;
                 } else {
@@ -35,6 +45,7 @@ fn part1(lines: &Vec<String>) -> u32 {
                 }
             }
         }
+
         sum += card_val;
     }
     sum
@@ -46,23 +57,34 @@ fn part2(lines: &Vec<String>) -> u64 {
     for line in lines {
         let mut card_val = 0;
         let card = line.split_once(": ").unwrap().1.split_once(" | ").unwrap();
-        let wins: Vec<u32> = card
+        let mut wins: Vec<u32> = card
             .0
             .trim()
             .replace("  ", " ")
             .split(" ")
             .map(|x| x.parse::<u32>().unwrap())
             .collect();
-        let conts: Vec<u32> = card
+        wins.sort_unstable();
+
+        let mut conts: Vec<u32> = card
             .1
             .trim()
             .replace("  ", " ")
             .split(" ")
             .map(|x| x.parse::<u32>().unwrap())
             .collect();
+        conts.sort_unstable();
 
-        for win_num in wins {
-            if conts.contains(&win_num) {
+        let (mut i, mut j) = (0, 0);
+
+        while i < wins.len() && j < conts.len() {
+            if wins[i] < conts[j] {
+                i += 1;
+            } else if wins[i] > conts[j] {
+                j += 1;
+            } else {
+                i += 1;
+                j += 1;
                 card_val += 1;
             }
         }
@@ -72,7 +94,6 @@ fn part2(lines: &Vec<String>) -> u64 {
 
     for i in 0..cards.len() {
         for j in 0..cards[i] {
-            println!("{i}{j}");
             card_copies[i + j as usize + 1] += card_copies[i];
         }
     }
